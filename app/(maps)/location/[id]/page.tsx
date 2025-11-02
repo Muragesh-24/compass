@@ -49,6 +49,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 
 import ReviewCard from "@/app/components/user/ReviewCard";
 import StarRating from "@/app/components/user/Rate";
+import { Location } from "@/lib/types";
 
 export default function LocationPage() {
   const { id } = useParams();
@@ -56,13 +57,15 @@ export default function LocationPage() {
   const page = searchParams.get("page") || "1";
   const router = useRouter();
 
-  const [location, setLocation] = useState<any>(null);
+
+  const [location, setLocation] = useState<Location | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [reviews, setReviews] = useState<any[]>([]);
   const [ratting, setRatting] = useState<number>(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const [mode] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     if (!id) return;
@@ -142,7 +145,7 @@ export default function LocationPage() {
     );
   }
 
-  const rating = location.avg_rating || 0;
+  const rating = location.avgRating || 0;
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
 
@@ -187,7 +190,7 @@ export default function LocationPage() {
 
         setTimeout(() => setErrorMessage(""), 2000);
       }
-    } catch (err) {
+    } catch {
       setErrorMessage("Submission failed. Try again.");
       setShowSuccess(false);
       setDrawerOpen(false);
@@ -199,14 +202,12 @@ export default function LocationPage() {
   const imagess = location.biopics;
   return (
     <div
-      className={`min-h-screen w-[100vw] flex justify-center ${
-        mode === "dark" ? "bg-gray-600" : "bg-gray-200"
-      }`}
+      className={`min-h-screen w-[100vw] flex justify-center ${mode === "dark" ? "bg-gray-600" : "bg-gray-200"
+        }`}
     >
       <div
-        className={`w-full  max-w-md mx-auto flex flex-col  ${
-          mode === "dark" ? "bg-black" : "bg-gray-200"
-        } `}
+        className={`w-full  max-w-md mx-auto flex flex-col  ${mode === "dark" ? "bg-black" : "bg-gray-200"
+          } `}
       >
         <div className="fixed top-4 right-4 space-y-2 transition-all">
           {showSuccess && (
@@ -237,9 +238,8 @@ export default function LocationPage() {
         <div>
           <div className="flex items-center justify-between px-4 py-3 border-b">
             <h1
-              className={`text-2xl font-bold ${
-                mode === "dark" ? "text-white" : "text-gray-900"
-              }`}
+              className={`text-2xl font-bold ${mode === "dark" ? "text-white" : "text-gray-900"
+                }`}
             >
               {location.name}
             </h1>
@@ -323,9 +323,8 @@ export default function LocationPage() {
             <div className="flex items-center gap-3">
               {/* Rating Value */}
               <span
-                className={`text-lg font-semibold ${
-                  mode === "dark" ? "text-white" : "text-gray-900"
-                }`}
+                className={`text-lg font-semibold ${mode === "dark" ? "text-white" : "text-gray-900"
+                  }`}
               >
                 {rating.toFixed(1)}
               </span>
@@ -351,7 +350,7 @@ export default function LocationPage() {
                 )}
               </div>
               <span className="text-sm text-gray-500">
-                ({location.ReviewCount} reviews)
+                ({location.reviewCount} reviews)
               </span>
             </div>
 
@@ -359,23 +358,21 @@ export default function LocationPage() {
               <div className="flex items-center gap-4 text-gray-700">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`px-2 py-1 text-sm rounded-full font-medium ${
-                      mode === "dark"
+                    className={`px-2 py-1 text-sm rounded-full font-medium ${mode === "dark"
                         ? "bg-gray-300 text-gray-200"
                         : "bg-gray-300 text-gray-700"
-                    }`}
+                      }`}
                   >
-                    {location.Tag}
+                    {location.locationType}
                   </span>
 
                   <span
-                    className={`px-2 py-1 text-sm rounded-full font-medium ${
-                      mode === "dark"
+                    className={`px-2 py-1 text-sm rounded-full font-medium ${mode === "dark"
                         ? "bg-gray-800 text-gray-200"
                         : "bg-gray-300 text-gray-700"
-                    }`}
+                      }`}
                   >
-                    {location.Time}
+                    {location.time}
                   </span>
                 </div>
               </div>
@@ -385,7 +382,7 @@ export default function LocationPage() {
                   <CircleUserRound className="cursor-pointer text-gray-700" />
                 </PopoverTrigger>
                 <PopoverContent className="w-64">
-                  <h4 className="font-semibold mb-1">{location.Contact}</h4>
+                  <h4 className="font-semibold mb-1">{location.contact}</h4>
                   <p className="text-gray-500">{location.contact}</p>
                 </PopoverContent>
               </Popover>
@@ -399,9 +396,8 @@ export default function LocationPage() {
     ${mode === "dark" ? "bg-gray-800" : "bg-gray-200"}  rounded-lg  p-3 border`}
               >
                 <p
-                  className={`${
-                    mode == "dark" ? "text-white" : "text-gray-700"
-                  } leading-relaxed`}
+                  className={`${mode == "dark" ? "text-white" : "text-gray-700"
+                    } leading-relaxed`}
                 >
                   {location.description}
                 </p>
@@ -465,9 +461,8 @@ export default function LocationPage() {
         <div className="px-4 w-full py-3 border-t">
           <div className="flex justify-between items-center mb-3">
             <h2
-              className={`text-lg font-semibold ${
-                mode === "dark" ? "text-white" : "text-gray-900"
-              } `}
+              className={`text-lg font-semibold ${mode === "dark" ? "text-white" : "text-gray-900"
+                } `}
             >
               Reviews
             </h2>
@@ -483,9 +478,8 @@ export default function LocationPage() {
               >
                 <DrawerHeader>
                   <DrawerTitle
-                    className={` ${
-                      mode == "dark" ? "text-white" : "text-black"
-                    }`}
+                    className={` ${mode == "dark" ? "text-white" : "text-black"
+                      }`}
                   >
                     Share your experience to help others
                   </DrawerTitle>
@@ -500,35 +494,31 @@ export default function LocationPage() {
 
                     <div>
                       <label
-                        className={`block text-sm font-medium ${
-                          mode == "dark" ? "text-white" : "text-gray-700"
-                        } mb-1`}
+                        className={`block text-sm font-medium ${mode == "dark" ? "text-white" : "text-gray-700"
+                          } mb-1`}
                       >
                         Your Review
                       </label>
                       <textarea
                         rows={4}
                         placeholder="Write your experience..."
-                        className={`w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${
-                          mode == "dark" ? "text-white" : "text-gray-700"
-                        } `}
+                        className={`w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${mode == "dark" ? "text-white" : "text-gray-700"
+                          } `}
                       />
                     </div>
 
                     <div>
                       <label
-                        className={`block text-sm font-medium  ${
-                          mode == "dark" ? "text-white" : "text-gray-700"
-                        } mb-1`}
+                        className={`block text-sm font-medium  ${mode == "dark" ? "text-white" : "text-gray-700"
+                          } mb-1`}
                       >
                         Upload Image (optional)
                       </label>
                       <input
                         type="file"
                         accept="image/*"
-                        className={`block w-full text-sm  ${
-                          mode == "dark" ? "text-white" : "text-gray-700"
-                        }`}
+                        className={`block w-full text-sm  ${mode == "dark" ? "text-white" : "text-gray-700"
+                          }`}
                       />
                     </div>
 

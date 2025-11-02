@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Result } from 'postcss';
 
 const CopyIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -25,8 +24,8 @@ interface UploadedImage {
 export default function NoticeboardForm() {
 
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setIsSubmitting] = useState(false);
+  const [, setError] = useState<string | null>(null);
 
   const [images, setImages] = useState<UploadedImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null); // To trigger file input click
@@ -94,8 +93,13 @@ export default function NoticeboardForm() {
           ?{...img, id: result.ImageID, isUploadingImage: false}
           : img
         ));
-      } catch (err: any){
-        setError(err.message);
+      } catch (err){
+        
+        if (err instanceof Error) {
+   setError(err.message);
+  } else {
+    setError('An unknown error occurred during image upload.');
+  }
         setImages(prev => prev.filter(img => img.previewUrl !== image.previewUrl));
         // removed the failed uploads
       }
@@ -126,6 +130,7 @@ export default function NoticeboardForm() {
         ));
     }, 2000);
   };
+  
   // -- changes -- 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,9 +160,14 @@ export default function NoticeboardForm() {
       console.log('Notice submitted successfully!');
       router.push('/admin/noticeboard');
 
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to submit notice:", err);
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      }
+      else {
+        setError('An unknown error occurred during submission.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -184,6 +194,7 @@ export default function NoticeboardForm() {
             name={field}
             placeholder={field}
             type="text"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             value={(formData as any)[field]}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder:text-gray-400"

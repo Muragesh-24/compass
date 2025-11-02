@@ -23,12 +23,12 @@ export default function Map({ onMarkerClick }: MapProps) {
         .then((result) => {
           if (result.state === "prompt") {
             navigator.geolocation.getCurrentPosition(
-              () => {},
-              () => {}
+              () => { },
+              () => { }
             );
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
     setIsReady(true);
   }, []);
@@ -93,31 +93,33 @@ export default function Map({ onMarkerClick }: MapProps) {
           }
         });
 
-        window.addEventListener("search-location", (e: any) => {
-          const { lng, lat } = e.detail;
-          map.flyTo({ center: [lng, lat], zoom: 14 });
+        window.addEventListener(
+          "search-location",
+          (e: CustomEvent<{ lng: number; lat: number }>) => {
+            const { lng, lat } = e.detail;
+            map.flyTo({ center: [lng, lat], zoom: 14 });
 
-          if (markerRef.current) {
-            markerRef.current.setLngLat([lng, lat]);
-            const el = markerRef.current.getElement();
-            el.style.cursor = "pointer";
-            el.addEventListener("click", (ev) => {
-              ev.stopPropagation();
-              onMarkerClick();
-            });
-          } else {
-            const newMarker = new maplibregl.Marker({ color: "#f00" })
-              .setLngLat([lng, lat])
-              .addTo(map);
-            const el = newMarker.getElement();
-            el.style.cursor = "pointer";
-            el.addEventListener("click", (ev) => {
-              ev.stopPropagation();
-              onMarkerClick();
-            });
-            markerRef.current = newMarker;
-          }
-        });
+            if (markerRef.current) {
+              markerRef.current.setLngLat([lng, lat]);
+              const el = markerRef.current.getElement();
+              el.style.cursor = "pointer";
+              el.addEventListener("click", (ev) => {
+                ev.stopPropagation();
+                onMarkerClick();
+              });
+            } else {
+              const newMarker = new maplibregl.Marker({ color: "#f00" })
+                .setLngLat([lng, lat])
+                .addTo(map);
+              const el = newMarker.getElement();
+              el.style.cursor = "pointer";
+              el.addEventListener("click", (ev) => {
+                ev.stopPropagation();
+                onMarkerClick();
+              });
+              markerRef.current = newMarker;
+            }
+          });
 
         setTimeout(() => {
           map.resize();

@@ -1,5 +1,5 @@
 "use client"
-import { Metadata } from 'next';
+// import { Metadata } from 'next';
 import Link from 'next/link';
 import { CheckCircle, AlertTriangle, Ban } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -86,15 +86,15 @@ export default function Page() {
         const data = await res.json()
 
         // adapt based on backend response shape
-        const formatted: Notice[] = data.noticeboard_list.map((n: any) => ({
-          id: n.NoticeId,
+        const formatted: Notice[] = data.noticeboard_list.map((n: Notice) => ({
+          id: n.id,
           title: n.title,
           description: n.description,
-          type: n.entity || "Event", // fallback until backend provides
+          type: n.type || "Event", // fallback until backend provides
           // publisher: n.user?.name || "Admin",
           recipient: n.recipient || "All",
           location: n.location || "Campus",
-          time: n.CreatedAt,
+          time: n.time,
         }))
 
         setNotices(formatted)

@@ -41,6 +41,12 @@ export function Step1Register({ onSuccess }: Step1RegisterProps) {
 
       const formData = new FormData(formRef.current!);
       const email = formData.get("email");
+      //email must end with @iitk.ac.in 
+ if (typeof email !== "string" || !email.toLowerCase().endsWith("@iitk.ac.in")) {
+  toast.error("Please use your IIT Kanpur email address.");
+  return;
+}
+
       const password = formData.get("password");
 
       const response = await fetch(

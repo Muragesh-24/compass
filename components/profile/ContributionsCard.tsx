@@ -3,12 +3,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LocationCard } from "@/components/profile/LocationCard";
+import { Location, Notice } from "@/lib/types";
 
-// TODO: Define the type of the locations interface to resolve the error
 interface ContributionsCardProps {
-  locations: [];
-  reviews: [];
-  notices: [];
+  locations: Location[];
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  reviews: any[];
+  notices: Notice[];
 }
 
 export function ContributionsCard({

@@ -85,7 +85,7 @@ export default function NoticeBoardPage() {
 
       if (json?.noticeboard_list?.length > 0) {
         setNotices((prev) => {
-          const newNotices = [...prev, ...json.noticeboard_list.map((n: any) => ({...n, id: n.NoticeId || n.id}))];
+          const newNotices = [...prev, ...json.noticeboard_list.map((n: Notice) => ({...n, id: n.id || n.id}))];
           setHasMore(newNotices.length < json.total_notices);
           return newNotices;
         });

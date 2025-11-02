@@ -23,3 +23,29 @@ export interface Notice {
   deletedAt?: string;
   ContributedBy?: string;
 }
+
+export interface Location {
+
+
+  CreatedAt: Date;
+  locationId: string;
+  name: string;
+  description: string;
+  locationType: string;
+  status: Status;
+  avgRating: number;
+  reviewCount: number;
+  tag: string;
+  contact: string;
+  time: string;
+  coverpic: string;
+  biopics: string[];
+
+
+}
+export enum Status {
+  "approved",
+  "pending",
+  "rejected",
+  "rejectedByBot",
+}

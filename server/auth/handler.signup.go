@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -24,6 +25,11 @@ func signupHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
 		return
 	}
+
+	if !strings.HasSuffix(strings.ToLower(input.Email), "@iitk.ac.in") {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please use your IIT Kanpur email address."})
+		return
+}
 	// FOR DEV: BYPASS RECAPTCHA
 	// ----------------------------------------------------------------------------- //
 	// Throws error if captcha verification fails
