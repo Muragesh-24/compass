@@ -85,17 +85,21 @@ export default function Page() {
         )
         const data = await res.json()
 
-        // adapt based on backend response shape
-        const formatted: Notice[] = data.noticeboard_list.map((n: Notice) => ({
-          id: n.id,
+          // adapt based on backend response shape
+
+//TODO: repplace any with proper type and remove eslint disable
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formatted: Notice[] = data.noticeboard_list.map((n: any) => ({
+          id: n.NoticeId,
           title: n.title,
           description: n.description,
-          type: n.type || "Event", // fallback until backend provides
+          type: n.entity || "Event", // fallback until backend provides
           // publisher: n.user?.name || "Admin",
           recipient: n.recipient || "All",
           location: n.location || "Campus",
-          time: n.time,
-        }))
+          time: n.CreatedAt,
+        }));
 
         setNotices(formatted)
 

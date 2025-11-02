@@ -160,14 +160,10 @@ export default function NoticeboardForm() {
       console.log('Notice submitted successfully!');
       router.push('/admin/noticeboard');
 
-    } catch (err) {
-      console.error("Failed to submit notice:", err);
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-      else {
+    } catch{
+   
         setError('An unknown error occurred during submission.');
-      }
+      
     } finally {
       setIsSubmitting(false);
     }

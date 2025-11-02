@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"strings"
+
 )
 
 // Helper Function: Verify Recaptcha calls Google API to validate token
@@ -51,14 +51,7 @@ func loginHandler(c *gin.Context) {
 		return
 	}
 
-	//email must end with @iitk.ac.in
-
-
-if !strings.HasSuffix(strings.ToLower(req.Email), "@iitk.ac.in") {
-    c.JSON(http.StatusBadRequest, gin.H{"error": "Please use your IIT Kanpur email address."})
-    return
-}
-
+	
 
 	// FOR DEV: BYPASS RE-CAPTCHA
 	// ----------------------------------------------------------------------------- //
