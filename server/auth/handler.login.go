@@ -75,7 +75,13 @@ func loginHandler(c *gin.Context) {
 		return
 	}
 
-	// Creating JWT token
+    ///check if user is verified
+	if !dbUser.IsVerified {
+		c.JSON(http.StatusForbidden, gin.H{"error": "User email not verified"})
+		return
+	}
+
+	// Creating JWT tokens
 	accessToken, err := middleware.GenerateAccessToken(dbUser.UserID);
 	refreshToken, err := middleware.GenerateRefreshToken(dbUser.UserID);
 	if err != nil {
