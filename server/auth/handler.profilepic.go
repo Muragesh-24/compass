@@ -21,6 +21,14 @@ func UploadProfileImage(c *gin.Context) {
 		return
 	}
 	userID := userIDRaw.(uuid.UUID)
+	cwd, _ := os.Getwd() 
+		var existingUser model.User
+	if err := connections.DB.Where("user_id = ?", userID).First(&existingUser).Error; err == nil {
+		if existingUser.ProfilePic != "" {
+			existingPfpPath := filepath.Join(cwd, "assets", existingUser.ProfilePic)
+			_ = os.Remove(existingPfpPath)
+		}
+	}
 
 	// Parsing form
 	if err := c.Request.ParseMultipartForm(10 << 20); err != nil {
@@ -28,15 +36,23 @@ func UploadProfileImage(c *gin.Context) {
 		return
 	}
 
+
 	file, header, err := c.Request.FormFile("profileImage")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Profile image is required"})
 		return
 	}
+
+	//limit the file size to 5mb
+	if header.Size > 5<<20 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "File size exceeds 5MB limit"})
+		return
+	}
+
 	defer file.Close()
 
 	// Giving absolute folder path
-	cwd, _ := os.Getwd() // absolute/path/to/compass/server
+	// absolute/path/to/compass/server
 	// uploadDir := filepath.Join(cwd, "public", "pfp")
 	uploadDir := filepath.Join(cwd, "assets", "pfp")
 
@@ -44,6 +60,8 @@ func UploadProfileImage(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
 		return
 	}
+
+
 
 	// Creating file
 	ext := filepath.Ext(header.Filename)
